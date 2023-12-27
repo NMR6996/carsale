@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Seçdiklərim{% endblock %}
+{% block content %}    
+
+    {% include 'partials/_header.html' %}
+
+    <div class="cta-content">
+        <h2 style="color: black; text-align: center;">Bəyən<em>diklərim</em></h2>
+    </div>
+
+    <!-- ***** Fleet Starts ***** -->
+    <section class="section" id="trainers">
+        <div class="container">
+            <br>
+            <br>
+            <div class="row">
+                {% for car in cars %}
+                    <div class="col-lg-4">
+                        <div class="trainer-item">
+                            <div class="image-thumb">
+                                <a href="{% url 'car_details' car.id %}">
+                                    <img src="{{ car.frontimage.url }}" style="height: 300px; object-fit: cover;" alt="">
+                                    {% if user.is_authenticated %}
+                                        {% if not request.user in car.favorites.all %}
+                                            <div class="favorite-icon">
+                                                <!-- Add your favorite icon HTML here -->
+                                                <a href="{% url 'favorites_add' car.id%}"><i class="fa fa-heart-o"></i></a><br><br>
+                                            </div>
+                                        {%else%}
+                                            <div class="favorite-icon">
+                                                <!-- Add your favorite icon HTML here -->
+                                                <a href="{% url 'favorites_add' car.id %}"><i class="fa fa-heart"></i></a><br><br>
+                                            </div>
+                                        {%endif%}
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="down-content">
+                                <span style="font-size: 20px; font-weight: bold;">Qiymət: {{ car.price }}&nbsp;{{ car.priceunit }}</span>
+
+                                <h4>{{ car.brand }}&nbsp;{{ car.model }}&nbsp;{{ car.year }}</h4>
+
+                                <p>
+                                    <i class="fa fa-dashboard"></i>Yürüş:&nbsp;{{ car.mileage }}&nbsp;
+                                    <i class="fa fa-cube"></i>Barter:&nbsp;{{ car.swap }} &nbsp;
+                                    <i class="fa fa-cog"></i>Kredit:&nbsp;{{ car.credit }} &nbsp;
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+            </div>
+            </div>
+
+            <br>
+
+            <nav>
+              <ul class="pagination pagination-lg justify-content-center">
+                <li class="page-item">
+                    {%if cars.has_previous%}
+                        <a class="page-link" href="?page={{cars.previous_page_number}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Əvvəlki</span>
+                        </a>
+                    {% endif %}
+                </li>
+
+                <li class="page-item"><a class="page-link" href="?page=1">İlk səhifə</a></li>
+                <li class="page-item"><a class="page-link">səhifə {{cars.number}} / {{cars.paginator.num_pages}}</a></li>
+
+                <li class="page-item">
+                    {%if cars.has_next%}
+                        <a class="page-link" href="?page={{cars.next_page_number}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Sonrakı</span>
+                        </a>
+                    {% endif %}
+                </li>
+              </ul>
+            </nav>
+
+        </div>
+    </section>
+    <!-- ***** Fleet Ends ***** -->
+
+
+{% endblock %}

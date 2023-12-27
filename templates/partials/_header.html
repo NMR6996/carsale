@@ -1,0 +1,36 @@
+<!-- ***** Header Area Start ***** -->
+<header class="header-area header-sticky">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    <!-- ***** Logo Start ***** -->
+                    <a href="{% url 'home' %}" class="logo">NMR<em> avto</em></a>
+                    <!-- ***** Logo End ***** -->
+                    <!-- ***** Menu Start ***** -->
+                    <ul class="nav">
+                        <li><a href="{%url 'home'%}" class="active">Avtomobillər</a></li>
+                        <li><a href="{% url 'caradd' %}">Elan yüklə</a></li>
+                        <li><a href="{%url 'contact'%}">Əlaqə</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Profil</a>
+                        
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'editprofile' %}">Hesabım</a>
+                                <a class="dropdown-item" href="{% url 'favorites_list' %}">Seçdiklərim</a>
+                                <a class="dropdown-item" href="{% url 'elanlar' %}">Elanlarım</a>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Çıxış</a>
+                            </div>
+                        </li>
+                    {% else %}
+                    <li><a href="{% url 'login' %}">Giriş</a></li>
+                    {% endif %}
+                        
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header><br><br><br><br>
+<!-- ***** Header Area End ***** -->

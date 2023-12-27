@@ -1,0 +1,505 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Avtomobillər {% endblock %}
+{% block content %}    
+
+    {% include 'partials/_header.html' %}
+
+    <div class="container" style="padding-bottom: 10px;">
+        <div class="row">
+            <!-- Submit Button -->
+            <div class="col-md-12">
+                <button onclick="myFunction()" class="btn btn-primary mx-auto d-block">Ətraflı axtarış</button>
+            </div>
+        </div>
+    </div>
+
+    <form action="{% url 'searchcar' %}" method="POST" id="contact">
+        {% csrf_token %}
+        <section class="section" id="trainers">
+            <div class="container">
+                <div class="contact-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select class="form-control" id="brand" name="brand" onchange="updateModels()">
+                                <option value="">Bütün markalar: </option>
+                                <option value="Abarth">Abarth</option>
+                                <option value="Acura">Acura</option>
+                                <option value="Alfa Romeo">Alfa Romeo</option>
+                                <option value="Aprilia">Aprilia</option>
+                                <option value="Arctic Cat">Arctic Cat</option>
+                                <option value="Asia">Asia</option>
+                                <option value="Aston Martin">Aston Martin</option>
+                                <option value="ATV">ATV</option>
+                                <option value="Audi">Audi</option>
+                                <option value="Avatr">Avatr</option>
+                                <option value="Baic">Baic</option>
+                                <option value="Bajaj">Bajaj</option>
+                                <option value="Bentley">Bentley</option>
+                                <option value="Bestune">Bestune</option>
+                                <option value="BMC">BMC</option>
+                                <option value="BMW">BMW</option>
+                                <option value="BMW Alpina">BMW Alpina</option>
+                                <option value="Brilliance">Brilliance</option>
+                                <option value="Buick">Buick</option>
+                                <option value="Bull Motors">Bull Motors</option>
+                                <option value="BYD">BYD</option>
+                                <option value="C.Moto">C.Moto</option>
+                                <option value="Cadillac">Cadillac</option>
+                                <option value="Can-Am">Can-Am</option>
+                                <option value="CFMOTO">CFMOTO</option>
+                                <option value="Changan">Changan</option>
+                                <option value="Chery">Chery</option>
+                                <option value="Chevrolet">Chevrolet</option>
+                                <option value="Chrysler">Chrysler</option>
+                                <option value="Citroen">Citroen</option>
+                                <option value="Dacia">Dacia</option>
+                                <option value="Daewoo">Daewoo</option>
+                                <option value="DAF">DAF</option>
+                                <option value="Daihatsu">Daihatsu</option>
+                                <option value="Dayun">Dayun</option>
+                                <option value="DFSK">DFSK</option>
+                                <option value="Dnepr">Dnepr</option>
+                                <option value="Dodge">Dodge</option>
+                                <option value="DongFeng">DongFeng</option>
+                                <option value="Ducati">Ducati</option>
+                                <option value="Eurotex">Eurotex</option>
+                                <option value="Fiat">Fiat</option>
+                                <option value="Ford">Ford</option>
+                                <option value="Foton">Foton</option>
+                                <option value="GAC">GAC</option>
+                                <option value="GAZ">GAZ</option>
+                                <option value="Geely">Geely</option>
+                                <option value="Genesis">Genesis</option>
+                                <option value="GMC">GMC</option>
+                                <option value="Great Wall">Great Wall</option>
+                                <option value="Haima">Haima</option>
+                                <option value="Haojue">Haojue</option>
+                                <option value="Harley-Davidson">Harley-Davidson</option>
+                                <option value="Haval">Haval</option>
+                                <option value="Honda">Honda</option>
+                                <option value="Hongqi">Hongqi</option>
+                                <option value="HOWO">HOWO</option>
+                                <option value="Hozon">Hozon</option>
+                                <option value="Hummer">Hummer</option>
+                                <option value="Hyundai">Hyundai</option>
+                                <option value="IJ">IJ</option>
+                                <option value="IM">IM</option>
+                                <option value="Indian Motorcycle">Indian Motorcycle</option>
+                                <option value="Infiniti">Infiniti</option>
+                                <option value="Iran Khodro">Iran Khodro</option>
+                                <option value="Isuzu">Isuzu</option>
+                                <option value="Iveco">Iveco</option>
+                                <option value="JAC">JAC</option>
+                                <option value="Jaguar">Jaguar</option>
+                                <option value="Jawa">Jawa</option>
+                                <option value="Jeep">Jeep</option>
+                                <option value="Jetour">Jetour</option>
+                                <option value="Jianshe">Jianshe</option>
+                                <option value="KAIYI">KAIYI</option>
+                                <option value="KamAz">KamAz</option>
+                                <option value="Kanuni">Kanuni</option>
+                                <option value="Karry">Karry</option>
+                                <option value="Kawasaki">Kawasaki</option>
+                                <option value="Kayo">Kayo</option>
+                                <option value="Keeway">Keeway</option>
+                                <option value="Khazar">Khazar</option>
+                                <option value="Kia">Kia</option>
+                                <option value="Kinroad">Kinroad</option>
+                                <option value="KrAZ">KrAZ</option>
+                                <option value="KTM">KTM</option>
+                                <option value="Kuba">Kuba</option>
+                                <option value="LADA (VAZ)">LADA (VAZ)</option>
+                                <option value="Lamborghini">Lamborghini</option>
+                                <option value="Land Rover">Land Rover</option>
+                                <option value="Lexus">Lexus</option>
+                                <option value="Li Auto">Li Auto</option>
+                                <option value="Lifan">Lifan</option>
+                                <option value="Lincoln">Lincoln</option>
+                                <option value="LuAz">LuAz</option>
+                                <option value="Mack">Mack</option>
+                                <option value="MAN">MAN</option>
+                                <option value="Maserati">Maserati</option>
+                                <option value="MAZ">MAZ</option>
+                                <option value="Mazda">Mazda</option>
+                                <option value="McLaren">McLaren</option>
+                                <option value="Megelli">Megelli</option>
+                                <option value="Mercedes">Mercedes</option>
+                                <option value="Mercedes-Maybach">Mercedes-Maybach</option>
+                                <option value="Mercury">Mercury</option>
+                                <option value="MG">MG</option>
+                                <option value="Mini">Mini</option>
+                                <option value="Minsk">Minsk</option>
+                                <option value="Mitsubishi">Mitsubishi</option>
+                                <option value="Mondial">Mondial</option>
+                                <option value="Moskvich">Moskvich</option>
+                                <option value="Moto Guzzi">Moto Guzzi</option>
+                                <option value="Muravey">Muravey</option>
+                                <option value="MV Agusta">MV Agusta</option>
+                                <option value="Nama">Nama</option>
+                                <option value="Nissan">Nissan</option>
+                                <option value="Opel">Opel</option>
+                                <option value="PAZ">PAZ</option>
+                                <option value="Peugeot">Peugeot</option>
+                                <option value="Piaggio">Piaggio</option>
+                                <option value="Polaris">Polaris</option>
+                                <option value="Polestar">Polestar</option>
+                                <option value="Pontiac">Pontiac</option>
+                                <option value="Porsche">Porsche</option>
+                                <option value="Ravon">Ravon</option>
+                                <option value="Renault">Renault</option>
+                                <option value="RKS">RKS</option>
+                                <option value="Rolls-Royce">Rolls-Royce</option>
+                                <option value="Rover">Rover</option>
+                                <option value="Royal Enfield">Royal Enfield</option>
+                                <option value="Saipa">Saipa</option>
+                                <option value="Saturn">Saturn</option>
+                                <option value="Scania">Scania</option>
+                                <option value="SEAT">SEAT</option>
+                                <option value="Shacman">Shacman</option>
+                                <option value="Shaolin">Shaolin</option>
+                                <option value="Skoda">Skoda</option>
+                                <option value="Skywell">Skywell</option>
+                                <option value="Smart">Smart</option>
+                                <option value="Ssang Yong">Ssang Yong</option>
+                                <option value="Subaru">Subaru</option>
+                                <option value="Suzuki">Suzuki</option>
+                                <option value="SYM">SYM</option>
+                                <option value="Talbot">Talbot</option>
+                                <option value="Tesla">Tesla</option>
+                                <option value="Tofas">Tofas</option>
+                                <option value="Togg">Togg</option>
+                                <option value="Toyota">Toyota</option>
+                                <option value="Triumph">Triumph</option>
+                                <option value="Tufan">Tufan</option>
+                                <option value="UAZ">UAZ</option>
+                                <option value="Ural">Ural</option>
+                                <option value="Vespa">Vespa</option>
+                                <option value="VGV">VGV</option>
+                                <option value="Volkswagen">Volkswagen</option>
+                                <option value="Volvo">Volvo</option>
+                                <option value="Vosxod">Vosxod</option>
+                                <option value="Voyah">Voyah</option>
+                                <option value="XPeng">XPeng</option>
+                                <option value="Yamaha">Yamaha</option>
+                                <option value="ZAZ">ZAZ</option>
+                                <option value="Zeekr">Zeekr</option>
+                                <option value="ZIL">ZIL</option>
+                                <option value="Zongshen">Zongshen</option>
+                                <option value="Zontes">Zontes</option>
+                                <option value="ZX Auto">ZX Auto</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control" id="model" name="model">
+                                <option value="">Bütün modellər: </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3" id="price" style="display:none;">
+                        <div class="col-md-6">
+                            <input type="number" class="form-control" name="minPrice" placeholder="Qiymət(min)">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="number" class="form-control" name="maxPrice" placeholder="Qiymət(max)">
+                        </div>
+                    </div>
+                    <div class="row mt-3" id="year" style="display:none;">
+                        <div class="col-md-6">
+                            <input type="number" class="form-control" name="minYear" placeholder="İl(min)">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="number" class="form-control" name="maxYear" id="maxPrice" placeholder="İl(max)">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <!-- Submit Button -->
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary mx-auto d-block">Axtar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    {% for car in cars %}
+                    <div class="col-lg-4">
+                        <div class="trainer-item">
+                            <div class="image-thumb">
+                                <a href="{% url 'car_details' car.id %}">
+                                    <img src="{{ car.frontimage.url }}" style="height: 300px; object-fit: cover;" alt="">
+                                    {% if user.is_authenticated %}
+                                        {% if not request.user in car.favorites.all %}
+                                            <div class="favorite-icon">
+                                                <!-- Add your favorite icon HTML here -->
+                                                <a href="{% url 'favorites_add' car.id%}"><i class="fa fa-heart-o"></i></a><br><br>
+                                            </div>
+                                        {%else%}
+                                            <div class="favorite-icon">
+                                                <!-- Add your favorite icon HTML here -->
+                                                <a href="{% url 'favorites_add' car.id %}"><i class="fa fa-heart"></i></a><br><br>
+                                            </div>
+                                        {%endif%}
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="down-content">
+                                <span style="font-size: 20px; font-weight: bold;">Qiymət: {{ car.price }}&nbsp;{{ car.priceunit }}</span>
+
+                                <h4>{{ car.brand }}&nbsp;{{ car.model }}&nbsp;{{ car.year }}</h4>
+
+                                <p>
+                                    <i class="fa fa-dashboard"></i>Yürüş:&nbsp;{{ car.mileage }}&nbsp;
+                                    <i class="fa fa-cube"></i>Barter:&nbsp;{{ car.swap }} &nbsp;
+                                    <i class="fa fa-cog"></i>Kredit:&nbsp;{{ car.credit }} &nbsp;
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <nav>
+              <ul class="pagination pagination-lg justify-content-center">
+                <li class="page-item">
+                    {%if cars.has_previous%}
+                        <a class="page-link" href="?page={{cars.previous_page_number}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Əvvəlki</span>
+                        </a>
+                    {% endif %}
+                </li>
+                <li class="page-item"><a class="page-link" href="?page=1">İlk səhifə</a></li>
+                <li class="page-item"><a class="page-link">səhifə {{cars.number}} / {{cars.paginator.num_pages}}</a></li>
+                <li class="page-item">
+                    {%if cars.has_next%}
+                        <a class="page-link" href="?page={{cars.next_page_number}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Sonrakı</span>
+                        </a>
+                    {% endif %}
+                </li>
+              </ul>
+            </nav>
+        </section>
+    </form>
+
+    {%block jscodes %}
+        <script>
+            function myFunction() {
+                const price = document.getElementById("price");
+                const year = document.getElementById("year");
+                if (price.style.display === "none") {
+                  price.style.display = "block";
+                } else {
+                  price.style.display = "none";
+                }
+                if (year.style.display === "none") {
+                  year.style.display = "block";
+                } else {
+                  year.style.display = "none";
+                }
+              }
+        </script>
+
+        <script>
+            function updateModels() {
+                var brandSelect = document.getElementById("brand");
+                var modelSelect = document.getElementById("model");
+
+                modelSelect.innerHTML = '<option value="">Bütün modellər: </option>';
+
+                var selectedBrand = brandSelect.value;
+
+                var models = {
+                    'Abarth': ['595'],
+                    'ABM': ['Volcan 150'],
+                    'Acura': ['ILX','MDX','ZDX'],
+                    'Alfa Romeo': ['147','159','Giulia','Stelvio'],
+                    'Aprilia': ['RS 125','RS 660','Tuono 660'],
+                    'Aston Martin': ['DBX','Rapide','V8 Vantage'],
+                    'ATV': ['150','Hummer 250'],
+                    'Audi': ['100','200','A1','A3','A4','A4 allroad','A5','A5','A5 Sportback','A6','A6 allroad','A7','A7','A7 Sportback','A8','Q3','Q5','Q5 Sportback','Q5 e-tron','Q7','Q8','Q8 Sportback e-tron','Q8 e-tron','R8','RS3','RS4','RS7','S4','S5','S6','S8','TT','e-tron','e-tron Sportback'],
+                    'Avatr': ['11'],
+                    'Baic': ['A1','D20','M60','Senova D50','Senova D70','X25','X3','X55','X55 II','X7'],
+                    'Bajaj': ['Discover','Dominar 250','Dominar 400','Pulsar N 250','Pulsar NS 160','Pulsar NS 200','Pulsar RS 200'],
+                    'Benelli': ['180S'],
+                    'Bentley': ['Bentayga','Continental','Continental Flying Spur','Continental GT','Flying Spur','Mulsanne'],
+                    'Bestune': ['NAT','T55','T77','T99'],
+                    'BMC': ['Pro 827','Pro 832'],
+                    'BMW': ['1-series','116','120','2-series','218','228','230','3-series','316','318','320','320 GT','323','325','328','328 GT','330','330e','335','4-series','420','428','430','435','5-series','520','520 GT','520e','523','525','528','530','530e','535','535 GT','540','545','545e','6-series','630','640','650','7-series','725','728','730','735','740','740Le','745','745Le','750','750e xDrive','760','8-series','840','BMW Moto','F 800 GS','R 1200 GS Adventure','M-series','M3','M5','M6','M8','X5 M','X6 M','XM','X-series','X1','X2','X3','X4','X5','X6','X7','Z-series','Z4','i-series','i3','i4','i5','i7','i7 M70','iX'],
+                    'BMW Alpina': ['B7'],
+                    'Brilliance': ['H 330','M2 (BS4)'],
+                    'Buick': ['Enclave','Encore','LaCrosse'],
+                    'BYD': ['F3','F6','Frigate 07','Han','Seal','Song','Song Plus','Tang','Yuan','Yuan Plus'],
+                    'C.Moto': ['CM400R-F8','CM400R-HY','CMR-F7','CMR-F8','CMR-RZ','CMR-SY','CMR-YZ'],
+                    'Cadillac': ['ATS','BLS','CT6','CTS','ELR','Escalade','SRX','XTS'],
+                    'Can-Am': ['Spyder F3','Spyder ST'],
+                    'CFMOTO': ['ATV','CFORCE 1000 OVERLAND','CFORCE 450L','CFORCE 520L','CFORCE-ATV-625','Moto','300 NK','300 SR','450 SR','650 MT','650 NK','700 CL-X Adventure','700 CL-X Sport','800 MT Touring','800 NK','Sport SIDE X SIDES','ZFORCE 1000 Sport R'],
+                    'Changan': ['Alsvin','Alsvin V3','Alsvin V5','Alsvin V7','Benni','CM-8','CS 15','CS 35','CS 35 Plus','CS 55 Plus','CS 75','CS 75 Plus','CS 85','CS 95','CX 20','Deepal S7','Eado','Eado DT','Eado Plus','F 70','Honor','Oshan A600','Oshan Z6','SC 6882','Star','Uni-K','Uni-T','Uni-V'],
+                    'Chery': ['Amulet (A15)','Arrizo 5','E5','Eastar (B11)','Fora (A21)','Fulwin 2','Kimo (A1)','Sweet (QQ)','Tiggo (T11)','Tiggo 2','Tiggo 2 Pro','Tiggo 3','Tiggo 7 Pro','Tiggo 7 Pro e+ ','Tiggo 8 Pro','Tiggo 8 Pro e+'],
+                    'Chevrolet': ['Aveo','Camaro','Captiva','Cavalier','Cobalt','Colorado','Corsica','Cruze','Damas','Epica','Equinox','Labo','Lacetti','Lanos','Lumina','Malibu','Matiz','Menlo','Nexia','Niva','Onix','Orlando','Rezzo','Silverado','Spark','Suburban','Tahoe','Tracker','TrailBlazer','Traverse','Trax','Volt'],
+                    'Chrysler': ['200','300C','Concorde','Neon','PT Cruiser','Voyager'],
+                    'Citroen': ['C-Elysee','C3','C4','C4 Picasso','C5','C5 Aircross','DS3','DS4','DS5','Jumper'],
+                    'Dacia': ['Dokker','Lodgy','Logan','Sandero'],
+                    'Dadi': ['Smoothing'],
+                    'Daewoo': ['Ace (Super Salon)','BS090','Damas','Espero','Gentra','Lacetti','Lanos','Leganza','Matiz','Nexia','Nubira','Prince','Racer','Tico'],
+                    'DAF': ['105 XF','95 XF','Hall','LF 55.220','XF 460 FT','XF 480'],
+                    'Daihatsu': ['Materia','Sirion','Terios'],
+                    'Dayun': ['DY150-12'],
+                    'DFSK': ['C-32 S','C-35','C-37','D51','E5','Glory 330','Glory 330 S','Glory 330 S Cargo'],
+                    'Dnepr': ['11'],
+                    'Dodge': ['Caliber','Challenger','Charger','Dart','Durango','Journey','Nitro','Ram','Viper'],
+                    'DongFeng': ['Fengshen A30','Fengshen H30','Fengshen S30'],
+                    'Ducati': ['1199 Panigale S','848 EVO','Diavel','Monster 796'],
+                    'ERF': ['ES8'],
+                    'FAW': ['Besturn B70','Besturn X80','J6P dumper 6x4','J6P dumper 8x4','Small Commercial','CA1010','Tiger VH','Tiger VH-L','Tiger VN','Tiger VR'],
+                    'Ferrari': ['458 Italia','California'],
+                    'Fiat': ['124 Spider','500','500C','500L','Albea','Cinquecento','Coupe','Doblo','Ducato','Fiorino','Grande Punto','Lancia','Linea','Punto','Qubo','Tempra','Tipo','Ulysse'],
+                    'Ford': ['Bronco','Bronco Sport','C-MAX','Cargo','Contour','Courier','Ecosport','Edge','Escape','Escort','Expedition','Explorer','F-150','Fiesta','Flex','Focus','Fusion','Galaxy','Kuga','Maverick','Mercury','Mondeo','Mustang','Mustang Mach-E','Puma','Ranger','Scorpio','Sierra','Tourneo Connect','Tourneo Custom','Transit'],
+                    'Foton': ['Aumark 1039','Aumark TX','Forland','Ollin'],
+                    'Gabro': ['Sport G 250R'],
+                    'GAC': ['GA5','GS4','GS5'],
+                    'GAZ': ['13','221717','231073','24','24-02','24-10','2705','2705-757','2705-777','27057','27903','3102','31029','3110','31105','3111','32212','3302-288','3302-744','330200','330202-740','33021','33023-744','330232-744','33027','3308','3309-352','51','52','53','63','66','69','A21R22-03','Biznes 330273','C41R13','C41R92','C45R02','Gazon C41R33','M-12','M-20 Pobeda','M-21','M-22','NEXT A68R52 CITY LINE','Next','Next A21R22-30','Next A21R32-30','Next A22R32','Next A23R22','Next A31R22','Next A32R32-40','Next A65R52','Next C41RB3','Next А31R32','Sadko C42A43','Sadko Next C41A23','Sobol'],
+                    'Geely': ['Atlas Pro','CK','Coolray','Emgrand','Englon TX4','MK','Monjaro','Okavango','TX4','Tugella','Tugella','Tugella S'],
+                    'Genesis': ['G70','G80','GV80'],
+                    'GMC': ['Acadia','Jimmy','Savana','Sierra','Terrain','Yukon'],
+                    'Grandmoto': ['BM3','Force','Strong','Tornado'],
+                    'GWM': ['Florid','Hover H3','Hover H5','Hover H6','Hover M2','Hover M4','Ora','Ora','Tank','Tank 300','Voleex C30','Voleex C50','Wingle'],
+                    'Haima': ['8S'],
+                    'Haojue': ['HJ150-6D','HJ150-9','TR150S','VN100'],
+                    'Harley-Davidson': ['FLSTC Heritage Softail Classic','FLSTN Softail Deluxe','Sportster Custom 1200','Touring Electra Glide','XL883N Sportster Iron 883'],
+                    'Haval': ['Dargo','F7x','H2','H6','H6 GT','H9','Jolion','M6'],
+                    'Honda': ['Accord','CR-V','City','Civic','Clarity','Element','Fit','Honda Moto','CB200X','CB300R','CBR 250','CBR 400','CBR 600','Dio Fit','H’ness CB350 DLX','H’ness CB350 DLX Pro','Today','VFR 1200','Insight','M-NV','Pilot','Ridgeline','e:NP1','e:NS1'],
+                    'Hongqi': ['E-HS9','HS5','HS7'],
+                    'HOWO': ['3241V','371','Shacman F2000','Sinotruk'],
+                    'Hozon': ['Neta V'],
+                    'Hummer': ['H1','H2','H3'],
+                    'Hyundai': ['Accent','Atos','Azera','County','Coupe','Creta','Elantra','Equus','Excel','Galloper','Genesis','Genesis Coupe','Getz','Grand Santa Fe','Grandeur','H 100','H-1','HD-45','HD-65','HD-72','IONIQ 5','IONIQ Electric','IONIQ Hybrid','IONIQ Plug-in-Hybrid','Kona','Matrix','Mighty EX6','Mighty EX8','Mighty EX9','Palisade','Santa Cruz','Santa Fe','Sonata','Staria','Terracan','Trajet','Tucson','Veloster','Venue','Veracruz','Verna','i10','i20','i30','i40','ix35','ix55'],
+                    'IJ': ['2126 Oda','2715','2717','27175','IJ Moto','Planeta 2','Planeta 4','Planeta 5','Upiter 4','Upiter 5'],
+                    'Ikarus': ['256'],
+                    'IM': ['L7','LS7'],
+                    'Infiniti': ['EX-series','EX35','FX-series','FX35','FX37','FX50','G-series','G25','G35','G37','I-Series','I35','JX-series','JX35','M-series','M35','M37S','Q-Series','Q30','Q50','Q50S','Q60','Q70','QX4','QX-Series','QX30','QX50','QX55','QX56','QX60','QX70','QX70S','QX80'],
+                    'Iran Khodro': ['Runna','Samand','Soren'],
+                    'Isuzu': ['Bogdan','D-Max','Ecobus','FSR 90 L','FVR 34 Q','MD 22 B','NHR 55 E','NKR 55 E','NKR 55 L','NKR 66 E','NMR 77 H','NMR 85 H','NPR','NPR 66 L','NPR 66 P','NPR 71','NPR 75','NPR 75 K','NPR 75 L','NPR75L-K','Roybus','Turkuaz'],
+                    'Iveco': ['300-25','35C15','Astra HD8','Daily 30-8','Daily 35C12H','Daily 35C15VH','EuroStar','Eurocargo','Otoyol','Stralis','Trakker'],
+                    'JAC': ['HFC 1040K','HFC5020K','J7','JS4','JS8','Sunray','T8'],
+                    'Jaguar': ['E-Pace','F-Pace','F-Pace R','F-Type','F-Type R','I-Pace','S-Type','XE','XF','XJ L','XK','XKR-S'],
+                    'Jawa': ['350'],
+                    'Jeep': ['Cherokee','Commander','Compass','Gladiator','Grand Cherokee','Patriot','Renegade','Wrangler'],
+                    'Jetour': ['Dashing','X70','X70 PLUS','X90 PLUS','X95'],
+                    'Jiangmen': ['Nav 450','Nav 500','RG storm','RGMT','RGV8','RY 125','S5'],
+                    'Jianshe': ['YBR-K'],
+                    'Jinbei': ['H2L'],
+                    'JMC': ['JX1062'],
+                    'KAIYI': ['X3','X3 Pro'],
+                    'KamAz': ['4308','43101','43118','5320','53202','53212','53213','53229','5410','54112','54115','5511','55111','6460','65115','6520'],
+                    'Kanuni': ['Mati 125','Nev 50','Trodon XS 50','Visal 125'],
+                    'Karry': ['Dolphin'],
+                    'Kawasaki': ['Ninja 400','Ninja 650','Ninja ZX-14','Z650'],
+                    'Kayo': ['Bull 2B AU150','EVOLUTION YX125EM'],
+                    'Khazar': ['LX','SD'],
+                    'Kia': ['Avella','Bongo','Cadenza','Carens','Carnival','Ceed','Ceed SW','Cerato','Cerato Koup','Clarus','Credos','K2700','K3','K5','K7','K8','Magentis','Mohave','Morning','Niro','Opirus','Optima','Pegas','Picanto','Pregio','Pride','ProCeed','Quoris','Rio','Rio X-Line','Seltos','Sephia','Shuma','Sorento','Soul','Spectra','Sportage','Stinger','Stonic','Venga'],
+                    'King Long': ['XMQ6127AYW'],
+                    'KrAZ': ['65053'],
+                    'KTM': ['390 Duke'],
+                    'Kuba': ['Blazer 50','Ege 50','RX9','X-boss'],
+                    'LADA (VAZ)': ['2101','21011','21013','2102','2103','2104','21045','2105','2106','2107','2108','2109','21099','2110','21103','2111','2112','2113','2114','2115','Granta','Granta Cross','Kalina','Largus','Largus','Largus Cross','Niva','Niva Bronto','Niva Travel','Oka','Priora','Vesta','Vesta','Vesta Cross','Vesta SW Cross','XRAY','XRAY','XRAY Cross'],
+                    'Lamborghini': ['Aventador','Urus'],
+                    'Land Rover': ['Defender','Discovery','Discovery Sport','Freelander','RR Evoque','RR Sport','RR Velar','Range Rover'],
+                    'Leapmotor': ['C11','T03'],
+                    'Lexus': ['CT-series','CT 200h','ES-series','ES 200','ES 250','ES 300','ES 300h','ES 350','GS-series','GS 200t','GS 250','GS 300','GS 350','GS 430','GS 450h','GX-series','GX 460','GX 470','IS-series','IS 200','IS 250','IS 300','IS 350','LS-series','LS 350','LS 430','LS 460','LS 500','LS 600h','LX-series','LX 450','LX 470','LX 500d','LX 570','LX 600','NX-series','NX 200','NX 200t','NX 250','NX 300','NX 300h','NX 350h','RX-series','RX 200t','RX 300','RX 330','RX 350','RX 350h','RX 400h','RX 450h+','RX 500h','UX-series','UX 200','UX 250h'],
+                    'Li Auto': ['L7','L9','One'],
+                    'Lifan': ['320','330','520','620','720','820','Cruiser','K19','V16S','Street bike','KP350','KPMcafe-4V','KPT200','X60'],
+                    'Lincoln': ['Aviator','Corsair','LS','MKC','MKZ','Navigator'],
+                    'Lotus': ['Eletre'],
+                    'Mack': ['Mack Anthem'],
+                    'MAN': ['19.414','26.403','26463','8-163','F 2000','TGA 18.400','TGA 18.410','TGA 18.430','TGA 18.440','TGA 18.463','TGA 18.480','TGA 33.480','TGA 480','TGA 510','TGS 33.360','TGX 18.440','TGX 18.480'],
+                    'Maple': ['X3 Pro'],
+                    'Maserati': ['Ghibli','GranTurismo','GranTurismo S','Grecale','Levante','Levante S','Quattroporte'],
+                    'MAZ': ['3577','5334','5337','54229','54322','54323','5549','642208','64229','643008'],
+                    'Mazda': ['2','3','323','6','CX-30','CX-5','CX-60','CX-7','CX-9','CX-90','MPV','MX-30','MX-5 Miata','Millenia','Titan','Tribute'],
+                    'Megelli': ['250S'],
+                    'Mercedes': ['100','170 V','190','A-Сlass','A 140','A 150','A 160','A 170','A 180','A 190','A 200','A 220','A 250','A 35 AMG 4MATIC','AMG GT','AMG GT','AMG GT 43','AMG GT 53','AMG GT 63 S','AMG GT S','B-Сlass','B 150','B 170','B 180','B 200','C-Сlass','C 180','C 200','C 220','C 230','C 240','C 250','C 280','C 300','C 300 e','C 32 AMG','C 320','C 350','C 350 e','C 43 AMG','C 63 AMG','CL-Сlass','CL 500','CL 550','CLA-Сlass','CLA 180','CLA 200','CLA 220','CLA 250','CLA 250 e','CLA 45 S AMG','CLK-Сlass','CLK 200','CLK 230','CLK 240','CLK 320','CLK 430','CLS-Сlass','CLS 250 CDI','CLS 300','CLS 320','CLS 350','CLS 450 Coupe','CLS 500','CLS 63 AMG','Citan','Commercial','0303','0403','1117','1217','1222','208 D','210 D','308 D','408 D','410 D','508','609 D','611 D','711 D','809 D','811 D','814 D','Actros 1840','Actros 1841','Actros 1842','Actros 1843','Actros 1844','Actros 1846','Actros 1848','Actros 2532','Actros 2540','Actros 2544','Atego 1217','Atego 1218','Atego 1222','Atego 1223','Atego 1224','Atego 1228','Atego 1229','Atego 1317','Atego 1318','Atego 1323','Atego 1517','Atego 1518','Atego 1523','Atego 1528','Atego 1823','Atego 1824','Atego 1828','Atego 2528','Atego 812','Atego 814','Atego 815','Atego 816','Atego 817','Atego 818','Atego 822','Atego 918','Axor 1824','Axor 1829','Axor 1833','Axor 1840','Axor 1843','Axor 2529','Axor 2533','Axor 3028','Axor 3340','Axor 4140','Travego','Vario','E-Сlass','200','230 E','250 C','300 D','E 180','E 200','E 220','E 230','E 240','E 250','E 260','E 270','E 280','E 290','E 300','E 300 de','E 300 e','E 320','E 350','E 350 e','E 36 AMG','E 400','E 43 4MATIC','E 430','E 450 4MATIC','E 500','E 53 4MATIC+','E 55 AMG','E 63 S 4MATIC+','EQC','EQC 400 4MATIC','EQS','EQS 450 4MATIC','EQS 450+','EQS 580 4MATIC','G-Сlass','G 230','G 300','G 320','G 350','G 400','G 500','G 55 AMG','G 63 AMG','G 65 AMG','GL-Сlass','GL 320','GL 350','GL 400','GL 420','GL 450','GL 500','GL 550','GL 63 AMG','GL Brabus Widestar','GLA-Сlass','GLA 200','GLA 250','GLB-Сlass','GLB 200','GLB 220','GLB 250','GLC-Сlass','GLC 200 4MATIC','GLC 200 4MATIC+ Coupe','GLC 200 Coupe','GLC 220','GLC 220 d 4MATIC Coupe','GLC 250','GLC 250 Coupe','GLC 300','GLC 300 Coupe','GLC 300 e 4MATIC','GLC 300 e 4MATIC+ Coupe','GLC 63S AMG','GLE-Сlass','GLE 300','GLE 350','GLE 350 Coupe','GLE 400','GLE 400 Coupe','GLE 43 AMG','GLE 43 AMG Coupe','GLE 450','GLE 450 4MATIC+ Coupe','GLE 53 AMG','GLE 53 AMG Coupe','GLE 63 AMG Coupe','GLE 63 AMG S 4MATIC+ Coupe','GLK-Сlass','GLK 220','GLK 250','GLK 300','GLK 350','GLS-Сlass','GLS 350','GLS 400','GLS 450','GLS 500','GLS 580','GLS 63 AMG','ML-Сlass','ML 250','ML 270','ML 300','ML 320','ML 350','ML 400','ML 63 AMG','Metris','R-Сlass','R 300','R 320','R 350','S-Сlass','280 S','500 SEL','S 250','S 280','S 300','S 320','S 350','S 350 d','S 350 d 4MATIC','S 400','S 400 d','S 400 d 4MATIC','S 420','S 430','S 450','S 450 4MATIC','S 500','S 500 4MATIC','S 500 Coupe','S 55 AMG','S 550','S 560 4MATIC','S 580 4MATIC','S 600','S 63 AMG','S 63 AMG Coupe','S 65 AMG','SL-Сlass','SL 63 AMG','SLK-Сlass','SLK 230','SLK 320','SLK 350','Sprinter','Sprinter 208','Sprinter 210','Sprinter 211','Sprinter 212','Sprinter 215','Sprinter 216','Sprinter 224','Sprinter 308','Sprinter 311','Sprinter 312','Sprinter 313','Sprinter 314','Sprinter 315','Sprinter 316','Sprinter 318','Sprinter 319','Sprinter 412','Sprinter 413','Sprinter 511','Sprinter 515','Sprinter 516','Sprinter 519','V-Сlass','V 220','V 230','V 250','V 300','Viano','Vaneo','Vito','Vito','Vito 108','Vito 109','Vito 110','Vito 111','Vito 112','Vito 113','Vito 114','Vito 115','Vito 116','Vito 119','Vito 120','Vito 126','X-Class','X 250D'],
+                    'Mercedes-Maybach': ['GLS 600 4MATIC','S 400','S 450','S 500','S 560','S 580 4MATIC','S 680 4MATIC'],
+                    'Mercury': ['Mystique'],
+                    'MG': ['3','350','4 EV','5','550','6','750','GT','HS','One','RX8','ZS','ZS T'],
+                    'Mini': ['Clubman','Cooper','Countryman','One'],
+                    'Minsk': ['D4 125','X250'],
+                    'Mitsubishi': ['ASX','Airtrek','Attrage','Canter','Chariot','Eclipse Cross','Galant','Grandis','L200','L300','Lancer','Mirage','Montero','Nativa','Outlander','Outlander Sport','Pajero','Pajero Mini','Pajero Sport','Pajero io','Rosa','Xpander'],
+                    'Mondial': ['125 ZNU','150 MASH','50 Revival','50 ZNU'],
+                    'Moskvich': ['2140','2141','403','408','412','427'],
+                    'Moto Guzzi': ['V100','V100 Mandello'],
+                    'Muravey': ['Muravey- 2 01','Muravey- 2 02','Muravey- 2 03','TG200','TGA200','TGA200-01','TGA200-01P'],
+                    'MV Agusta': ['F3 800'],
+                    'Nama': ['48-2'],
+                    'Neoplan': ['Cityliner'],
+                    'Nissan': ['Almera','Altima','Armada','Cedric','Frontier','GT-R','Juke','Kicks','Leaf','March','Maxima','Micra','Murano','Navara','Note','Pathfinder','Patrol','Primastar','Primera','Qashqai','Rogue','Sentra','Serena','Skyline','Sunny','Teana','Terrano','Tiida','Urvan','Versa','Wingroad','X-Trail','Xterra'],
+                    'NIU': ['N-GT Pro'],
+                    'Opel': ['Agila','Antara','Astra','Cascada','Combo','Corsa','Crossland X','Frontera','Grandland X','Insignia','Kadett','Meriva','Mokka','Omega','Signum','Sintra','Speedster','Tigra','Vectra','Vita','Vivaro','Zafira'],
+                    'PAZ': ['32054'],
+                    'Peugeot': ['2008','2008','e-2008','206','207','3008','301','306','307','308','308','308 SW','405','406','407','5008','508','508','607','807','Bipper','Boxer','Khazar 406','Pars','Partner','RCZ'],
+                    'Polad': ['M 50','S 50'],
+                    'Polestar': ['2'],
+                    'Porsche': ['911','911 Carrera','Boxster GTS','Cayenne','Cayenne','Cayenne Coupe','Cayenne E-Hybrid','Cayenne E-hybrid Coupe','Cayenne GTS','Cayenne GTS Coupe','Cayenne S','Cayenne S Coupe','Cayenne Turbo','Cayenne Turbo GT Coupe','Cayenne Turbo S','Cayenne Turbo S E-Hybrid','Cayman','Macan','Macan','Macan S','Macan Turbo','Panamera','Panamera','Panamera 4','Panamera 4 E-Hybrid','Panamera 4S','Panamera GTS','Panamera S','Panamera Turbo','Panamera Turbo Executive','Panamera Turbo S','Panamera Turbo S E-Hybrid','Taycan','Taycan','Taycan 4S'],
+                    'Radar': ['RD6'],
+                    'RAF': ['2203','22031'],
+                    'Ravon': ['Nexia R3','R2','R4'],
+                    'Renault': ['12 Toros','Arkana','Clio','Dokker','Duster','Espace','Fluence','Grand Scenic','Kangoo','Kaptur','Koleos','Laguna','Logan','Magnum','Master','Megane','Megane Scenic','Premium 420','Premium 460','Sandero','Scenic','Symbol','Tondar','Trafic','Vel Satis'],
+                    'RKS': ['Blazer 50','Spontini 110'],
+                    'Rolls-Royce': ['Ghost','Phantom','Silver Shadow'],
+                    'Rover': ['416','75'],
+                    'Royal Enfield': ['Classic 350','Hunter 350','Meteor 350','Super Meteor 650'],
+                    'Saipa': ['132','141','Rich','Saina','Tiba'],
+                    'Scania': ['G420','R420','R440','R500'],
+                    'Scion': ['tC'],
+                    'SEAT': ['Exeo','Ibiza','Leon','Leon Cupra','Toledo'],
+                    'Shacman': ['F2000','F3000','SX3314DT366','SX3315DT366'],
+                    'Shaolin': ['SLG 6602'],
+                    'Skoda': ['Fabia','Kamiq','Karoq','Kodiaq','Octavia','Rapid','Scala','Superb','Yeti'],
+                    'Skywell': ['ET5','HT-i'],
+                    'Smart': ['Forfour'],
+                    'Soueast': ['A5','DX5'],
+                    'Ssang Yong': ['Actyon','Actyon Sports','Chairman','Korando','Kyron','Rexton','Rexton Sports'],
+                    'Subaru': ['B9 Tribeca','BRZ','Forester','Impreza','Legacy','Outback','XV'],
+                    'Suzuki': ['Baleno','Grand Vitara','Ignis','SX4','Suzuki Moto','AN 125','Boulevard','GSR 600','GSR 750','GSX-R 1000','GSX-R 600','Inazuma 250','Intruder M-800','Intruder M1800R','Kingquad 750','RM-Z 450','Swift','Vitara'],
+                    'SYM': ['Orbit III'],
+                    'Tesla': ['Model 3','Model S','Model X','Model Y'],
+                    'Tofas': ['Dogan','Kartal','Sahin'],
+                    'Toyota': ['Auris','Avalon','Avensis','C-HR','Caldina','Camry','Coaster','Corolla','Corolla Cross','Crown','FJ Cruiser','Fortuner','GT 86','Harrier','HiAce','Highlander','Hilux','IQ','Innova','Land Cruiser','Mark II','Matrix','Prado','Previa','Prius','Prius C','Prius Prime','Prius V','Proace','RAV4','Rush','Sequoia','Sienna','Sienta','Supra','Tacoma','Tercel','Tundra','Urban Cruiser','Venza','Verso','Vitz','Yaris','Yaris Cross','bZ3','bZ4X'],
+                    'Tufan': ['CR 200','CUB50','CUB50 S','City 125','City 50','Istiqlal','M50','S 150','T10 Max'],
+                    'UAZ': ['2206','31512','31514','31519','3153','3303','33036','39094','39625','452','462','469','Patriot'],
+                    'Ural': ['4320','8.1238 Volk','DNEPR MT'],
+                    'Vespa': ['GTS 300','Primavera 125','SXL 150','Sprint 50','VXL 150'],
+                    'VGV': ['U70 Pro','U75 Plus'],
+                    'Volkswagen': ['Amarok','Arteon','Atlas','Beetle','Bora','Caddy','Caravelle','Crafter','Golf','Golf GTI','Golf Plus','Golf R','ID.3','ID.4','ID.6','Jetta','LT','Multivan','Parati','Passat','Passat CC','Pointer','Polo','Scirocco','Sharan','Taos','Tayron','Tiguan','Touareg','Touran','Transporter','Vento'],
+                    'Volta': ['APM5','VM4 NEO','VS2','VSM','VSX','VT5'],
+                    'Volvo': ['460','480','760','850','940','FH 12','FH 13','FH 16','FH 460','FH 500','S40','S70','S80','S90','V 90','V40','XC40','XC60','XC90'],
+                    'Vosxod': ['3M'],
+                    'Voyah': ['Dreamer','Free'],
+                    'Xinling': ['XL110ZH-2'],
+                    'XPeng': ['G9'],
+                    'Yamaha': ['Crux','FZ-S FI Deluxe','FZ-X','FZ25','FZ6N','Fazer 150','Grizzly 700','MT-07','MT-09','MT-15','R15','R15 V4','R15M','R15S','RAY-ZR','RayZR Street Rally 125','YBR 125','YZF-R1'],
+                    'Yutong': ['6831'],
+                    'ZAZ': ['968M','Lanos','Sens','Slavuta','Tavriya','Vida'],
+                    'Zeekr': ['X'],
+                    'ZIL': ['130','131','4334','5301','MMZ 45023'],
+                    'Zongshen': ['RX3S','Spex','ZII ZS200-76'],
+                    'Zontes': ['R250','Tiger ZT150-3A','U-125','ZT155-G1'],
+                    'ZX Auto': ['Grand Tiger','Terralord']
+                };
+
+                if (selectedBrand && models[selectedBrand]) {
+                    models[selectedBrand].forEach(function (model) {
+                        var option = document.createElement("option");
+                        option.value = model;
+                        option.text = model;
+                        modelSelect.add(option);
+                    })
+                }
+            }
+        </script>
+    {% endblock %}
+{% endblock %}

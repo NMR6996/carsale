@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block title %} Əlaqə {% endblock %}
+{% block content %}
+
+    {% include 'partials/_header.html' %}
+
+    <section class="section section-bg" id="call-to-action" style="background-image: url({% static 'assets/images/banner-image-1-1920x500.jpg' %})">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+                    <div class="cta-content">
+                        <br>
+                        <br>
+                        <h2>Əlaqə saxlamaqdan <em>Çəkinmə</em></h2>
+                        <p>Texniki problemlərinizi bizlə bölüşün!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ***** Features Item Start ***** -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-lg-6 offset-lg-3">
+                    <div class="section-heading">
+                        <h2>Əlaqə <em> məlumatları</em></h2>
+                        <img src="{% static 'assets/images/line-dec.png' %}" alt="waves">
+                        {% if user.is_authenticated %}
+                            {%if success%}<h5 style="background-color: rgba(0, 128, 0, 0.4); line-height: 1.5;">Hörmətli&nbsp;{{user.username}}.&nbsp;{{success}}</h5>{%endif%}
+                        {% else %}
+                            {%if success%}<h5 style="background-color: rgba(0, 128, 0, 0.4); line-height: 1.5;">{{success}}</h5>{%endif%}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="icon">
+                        <i class="fa fa-phone"></i>
+                    </div>
+
+                    <h5><a href="#">+994 70 992 4546</a></h5>
+
+                    <br>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="icon">
+                        <i class="fa fa-envelope"></i>
+                    </div>
+
+                    <h5><a href="#">cefersadiq@gmail.com</a></h5>
+
+                    <br>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="icon">
+                        <i class="fa fa-map-marker"></i>
+                    </div>
+
+                    <h5>Naxçıvan Muxtar Respublikası</h5>
+
+                    <br>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ***** Features Item End ***** -->
+   
+    <!-- ***** Contact Us Area Starts ***** -->
+    <section class="section" id="contact-us" style="margin-top: 0">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <div id="map">
+                      <iframe src="https://maps.google.com/maps?q=Av.+L%C3%BAcio+Costa,+Rio+de+Janeiro+-+RJ,+Brazil&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="600px" frameborder="0" style="border:0" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <div class="contact-form section-bg" style="background-image: url({% static 'assets/images/contact-1-720x480.jpg' %})">
+                        <form id="contact" method="post">
+                          {%csrf_token%}
+                          <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                              <fieldset>
+                              {% if user.is_authenticated %}
+                                  <input name="user" value={{user.id}} type="hidden" required id="id_user">
+                              {% else %}
+                                  <input name="user" value={{3}} type="hidden" required id="id_user">
+                              {% endif %}
+                              </fieldset>
+                            </div>
+                            <div class="col-md-12 col-sm-12">
+                              <fieldset>
+                                <input name="title" type="text" placeholder="Başlıq" maxlength="100" required id="id_title">
+                              </fieldset>
+                            </div>
+                            <div class="col-lg-12">
+                              <fieldset>
+                                <textarea name="content" placeholder="Mesaj" cols="40" rows="10" required id="id_content"></textarea>
+                              </fieldset>
+                            </div>
+                            <div class="col-lg-12">
+                              <fieldset>
+                                <button type="submit" id="form-submit" class="main-button">Göndər</button>
+                              </fieldset>
+                            </div>
+                          </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ***** Contact Us Area Ends ***** -->
+    
+{%endblock%}

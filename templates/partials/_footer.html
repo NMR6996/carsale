@@ -1,0 +1,23 @@
+{% load static %}
+
+<footer>
+    <nav>
+        <ul>
+            <li><a href="{% url 'home' %}"><img src="{% static 'assets/images/home.png' %}" alt="Əsas səhifə"></a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'caradd' %}"><img src="{% static 'assets/images/plus.png' %}" alt="Elan yerləşdir"></a></li>
+            {% else %}
+                <li><a href="{% url 'caradd' %}" onclick="checkAuthentication();"><img src="{% static 'assets/images/plus.png' %}" alt="Elan yerləşdir"></a></li>
+            {% endif %}
+
+            {% if not user.is_authenticated %}
+            <li><a href="{% url 'login' %}"><img src="{% static 'assets/images/enter.png' %}" alt="Giriş"></a></li>
+            {% else %}
+            <li><a href="{% url 'elanlar' %}"><img src="{% static 'assets/images/car.png' %}" alt="Avtomobillər"></a></li>
+            <li><a href="{% url 'editprofile' %}"><img src="{% static 'assets/images/user.png' %}" alt="Hesabım"></a></li>
+            <li><a href="{% url 'favorites_list' %}"><img src="{% static 'assets/images/lover.png' %}" alt="Seçdiklərim"></a></li>
+            <li><a href="{% url 'logout' %}"><img src="{% static 'assets/images/reject.png' %}" alt="Çıxış"></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</footer>

@@ -1,0 +1,71 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Jafar Sadigzade">
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/images/favicon.png' %}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+
+    <title>NMRavto.az | {% block title %} {% endblock %}</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/bootstrap.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    {% block csscodes %}  {% endblock %}
+    <script>
+        function showErrorMessage() {
+            alert("Elan yerləşdirmək üçün səhifəyə giriş edin.");
+        }
+
+        function checkAuthentication() {
+            const isAuthenticated = false; // Replace with your authentication check
+
+            if (!isAuthenticated) {
+                showErrorMessage();
+            } else {
+                // Redirect to the desired link or perform the authenticated action
+                window.location.href = "{% url 'login' %}";
+            }
+        }
+    </script>
+
+
+  </head>
+
+<body>
+    {% block content %}
+
+    {% endblock %}
+
+    <!-- ***** Footer Start ***** -->
+    {% include 'partials/_footer.html' %}
+    <!-- ***** Footer End ***** -->
+
+    {% block jscodes %}
+
+    {% endblock %}
+
+    <!-- jQuery -->
+    <script src="{% static 'assets/js/jquery-2.1.0.min.js' %}"></script>
+
+    <!-- Bootstrap -->
+    <script src="{% static 'assets/js/popper.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+
+    <!-- Plugins -->
+    <script src="{% static 'assets/js/scrollreveal.min.js' %}"></script>
+    <script src="{% static 'assets/js/waypoints.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.counterup.min.js' %}"></script>
+    <script src="{% static 'assets/js/imgfix.min.js' %}"></script>
+    <script src="{% static 'assets/js/mixitup.js' %}"></script>
+    <script src="{% static 'assets/js/accordions.js' %}"></script>
+
+    <!-- Global Init -->
+    <script src="{% static 'assets/js/custom.js' %}"></script>
+    <script src="https://kit.fontawesome.com/a3d25aa6b6.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
