@@ -1,141 +1,72 @@
-from .forms import NewComment, NewContactUs, EditUserProfile
-from .models import Caradd, CarMultipleImages, Profile
+from .forms import NewComment, NewContactUs
+from .models import Caradd, CarMultipleImages
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.views import generic
-from django.urls import reverse_lazy
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_text
-from django.utils.decorators import method_decorator
-from .tokens import account_activation_token
-from django.core.mail import EmailMessage
-from django.conf import settings
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
-from smtplib import SMTPRecipientsRefused
 from django.views.decorators.csrf import csrf_exempt
-
-
-# Create your views here.
-
-@csrf_exempt
-def send_activation_mail(user, request):
-    current_site = get_current_site(request)
-    email_subject = 'Hesab aktivasiyası'
-    email_body = render_to_string('activation.html', {
-        'user': user,
-        'domain': current_site,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': account_activation_token.make_token(user)
-    })
-    email = EmailMessage(subject=email_subject, body=email_body, from_email=settings.EMAIL_FROM_USER, to=[user.email])
-    email.send()
-
-
-@csrf_exempt
-def reset_password_mail(user, request):
-    current_site = get_current_site(request)
-    email_subject = 'Parol sıfırlama'
-    email_body = render_to_string('resetting.html', {
-        'user': user,
-        'domain': current_site,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': account_activation_token.make_token(user)
-    })
-    email = EmailMessage(subject=email_subject, body=email_body, from_email=settings.EMAIL_FROM_USER, to=[user.email])
-    email.send()
+from .custom_functions import *
+import random
+from django.urls import reverse
 
 
 @csrf_exempt
 def register_request(request):
+    message = random.randint(1000, 9999)
     if request.method == 'POST':
         username = (request.POST["username"]).lower()
-        email = request.POST["email"]
         pass1 = request.POST["password1"]
         pass2 = request.POST["password2"]
-        mobile = request.POST["phone_number"]
+        phone_number = request.POST["phone_number"]
 
         if pass1 == pass2:
-            if User.objects.filter(username=username).exists():
-                return render(request, "register.html",
-                              {
-                                  "error": "Bu ad artıq istifadə olunub!",
-                                  "username": username,
-                                  "email": email
-                              })
+            if NewUser.objects.filter(username=username).exists():
+                messages.error(request, "Bu ad artıq istifadə olunub!")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('register')))
             else:
-                if User.objects.filter(email=email).exists():
-                    return render(request, "register.html",
-                                  {
-                                      "error": "Bu e-poçt artıq istifadə olunub!",
-                                      "username": username,
-                                      "email": email
-                                  })
+                if NewUser.objects.filter(phone_number=phone_number).exists():
+                    messages.error(request, "Bu telefon nömrəsi artıq istifadə olunub!")
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('register')))
                 else:
-                    if Profile.objects.filter(phone_number=mobile).exists():
-                            return render(request, "register.html",
-                                {
-                                    "error":"Bu telefon nömrəsi artıq istifadə olunub!",
-                                    "username":username,
-                                    "mobile":mobile,
-                                    "email":email
-                                })
+                    if len(pass1) < 6:
+                        messages.error(request, "Parol minimum 6 simvoldan ibarət olmalıdır!")
+                        return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('register')))
                     else:
-                        if len(pass1) < 6:
-                            return render(request, "register.html", {
-                                "error": "Parol minimum 6 simvoldan ibarət olmalıdır! ",
-                                "username": username,
-                                "mobile": mobile,
-                                "email": email
-                            })
+                        if len(phone_number) != 12:
+                            messages.error(request, "Telefon nömrəsini düzgün daxil edin!")
+                            messages.error(request, "Nümunə: 994709924546")
+                            return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('register')))
                         else:
-                            if len(mobile) != 10:
-                                return render(request, "register.html", {
-                                    "error": "Telefon nömrəsini düzgün daxil edin: nümunə: 0501112233 ",
-                                    "username": username,
-                                    "mobile": mobile,
-                                    "email": email
-                                })
-                            else:
-                                user = User.objects.create_user(username=username, email=email,
-                                                                password=pass1)
-                                user.is_active = False
-                                user.save()
-                                profile = Profile(user=user, phone_number=mobile)
-                                profile.save()
+                            user = NewUser.objects.create_user(username=username, phone_number=phone_number, password=pass1, is_active=False, otp=message)
+                            user.save()
+                            send_otp(phone_number, message)
 
-                                # mail gonder
-                                try:
-                                    send_activation_mail(user, request)
-                                except SMTPRecipientsRefused:
-                                    user.delete()
-                                    return render(request, "register.html", {
-                                        "error": "E-poçtunuzu düzgün daxil etməsəniz, qeydiyyatınız tamamlanmayacaq! ",
-                                        "username": username,
-                                        "mobile": mobile,
-                                        "email": email
-                                    })
-
-                                return render(request, "login.html",
-                                              {
-                                                  "success1": "Qeydiyyatınız uğurla tamamlandı!",
-                                                  "success2": "Hesabı aktivləşdirmək üçün e-poçta daxil olun.(Spam "
-                                                              "bölməsinə baxın!)",
-                                                  "username": username,
-                                              })
+                            messages.success(request, "Qeydiyyatınız uğurla tamamlandı!")
+                            messages.success(request,
+                                             "Hesabı aktivləşdirmək üçün bir dəfəlik parolu daxil edin!)")
+                            return redirect('otp', username=username, phone_number=phone_number)
         else:
-            return render(request, "register.html",
-                          {
-                              "error": "Parollar eyni deyil!",
-                              "username": username,
-                              "email": email
-                          })
-    return render(request, "register.html")
+            messages.error(request, "Parollar eyni deyil!")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('register')))
+    return render(request, "signup/register.html")
+
+
+def on_time_password(request, username, phone_number):
+    if request.method == "POST":
+        otp = request.POST["otp"]
+        try:
+            user = NewUser.objects.get(username=username, phone_number=phone_number, otp=otp)
+            user.is_active = True
+            user.otp_attempts -= 1
+            user.save()
+            messages.success(request, "Hesabınız aktivləşdirildi!")
+            return redirect('login')
+        except NewUser.DoesNotExist:
+            messages.error(request, "Bir dəfəlik parolu düzgün daxil edin! ")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    return render(request, "signup/otp.html")
 
 
 @csrf_exempt
@@ -150,10 +81,9 @@ def login_request(request):
             login(request, user)
             return redirect("home")
         else:
-            return render(request, "login.html", {
-                "error": "Daxil edilən məlumatlarda səhvlik var!"
-            })
-    return render(request, 'login.html')
+            messages.error(request, "username və ya password səhvdir!")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('register')))
+    return render(request, 'signup/login.html')
 
 
 def logout_request(request):
@@ -161,59 +91,49 @@ def logout_request(request):
     return redirect("home")
 
 
-def activate_user(request, uidb64, token):
-    uid = force_text(urlsafe_base64_decode(uidb64))
-    user = User.objects.get(pk=uid)
-
-    if user and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-        return render(request, 'login.html',
-                      {"success1": 'Email aktivləşdirildi giriş edə bilərsiniz.', 'username': user})
-    else:
-        return render(request, 'login.html', {"success1": 'Email aktivdir', 'username': user})
-
-
-@csrf_exempt
-def forget_password(request):
+def forget_password_request(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        if not User.objects.filter(username=username).first():
-            return render(request, "forget-password.html",
-                          {'message': 'Belə username tapılmadı:', 'username': username})
-        user = User.objects.get(username=username)
-        reset_password_mail(user, request)
-        return render(request, 'login.html', {'message': 'E-poçtunuza parol sıfırlmaq linki göndərildi!'})
-    return render(request, 'forget-password.html')
+        username = request.POST["username"]
+        try:
+            user = NewUser.objects.get(username=username)
+            message = random.randint(1000, 9999)
+            user.otp = message
+            user.save()
+            send_otp(user.phone_number, message)
+            messages.success(request, "Birdəfəlik parol telefonunuza göndərildi!")
+            return redirect('reset-password', username=username)
+
+        except NewUser.DoesNotExist:
+            messages.error(request, "Bu adda hesab tapılmadı!")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return render(request, 'signup/forget-password.html')
 
 
-@csrf_exempt
-def reset_password(request, uidb64, token):
-    uid = force_text(urlsafe_base64_decode(uidb64))
-    user = User.objects.get(pk=uid)
-    user_id = user.id
-
-    if user and account_activation_token.check_token(user, token):
-        if request.method == 'POST':
-            pass1 = request.POST["password1"]
-            pass2 = request.POST["password2"]
-            user_id = request.POST["user_id"]
-            if pass1 != pass2:
-                messages.warning(request, 'Parollar eyni deyil!')
-                return redirect(f'/reset-password/{uidb64}/{token}')
+def reset_password_request(request, username):
+    user = NewUser.objects.get(username=username)
+    if request.method == 'POST':
+        password1 = request.POST["password1"]
+        password2 = request.POST["password2"]
+        otp = request.POST["otp"]
+        if otp == user.otp and password1 == password2:
+            if len(password1) >= 6:
+                user.set_password(password1)
+                user.save()
+                messages.success(request, "Parolunuz uğurla dəyişdirildi")
+                return redirect('login')
             else:
-                if len(pass1) < 6:
-                    messages.warning(request, "Parol minimum 6 simvoldan ibarət olmalıdır! ")
-                    return redirect(f'/reset-password/{uidb64}/{token}')
-
-                else:
-                    user = User.objects.get(id=int(user_id))
-                    user.set_password(pass1)
-                    user.save()
-                    return render(request, 'login.html',
-                                  {'success1': "Parolunuz uğurla dəyişdirildi!", 'username': user.username})
-
-    return render(request, 'reset-password.html', {'user_id': user_id})
+                messages.error(request, "Parol minimum 6 simvoldan ibarət olmalıdır!")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        elif otp != user.otp and password1 == password2:
+            messages.error(request, "Bir dəfəlik parolu düzgün daxil edin!")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        elif otp == user.otp and password1 != password2:
+            messages.error(request, "Parollar eyni deyil!")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.error(request, "Daxil etdiyiniz məlumatlarda səhvlik var!")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return render(request, 'signup/reset-password.html')
 
 
 @csrf_exempt
@@ -230,8 +150,7 @@ def contact(request):
 
 
 def profile(request):
-    user = User.objects.get(id=request.user.id)
-    profile = Profile.objects.get(user=user)
+    user = NewUser.objects.get(id=request.user.id)
 
     if request.method == 'POST':
         first_name = request.POST['first_name']
@@ -240,19 +159,12 @@ def profile(request):
 
         user.first_name = first_name
         user.last_name = last_name
+        user.phone_number = phone_number
         user.save()
-        profile.phone_number = phone_number
-        profile.save()
+        messages.success(request, "Parolunuz uğurla dəyişdirildi")
+        return render(request, "profile.html", {"user": user})
+    return render(request, "profile.html", {"user": user})
 
-        return render(request, "profile.html", {
-            "user": user,
-            "profile": profile,
-            "success": "Uğurla redakte olundu!"
-        })
-    return render(request, "profile.html", {
-        "user": user,
-        "profile": profile
-    })
 
 @csrf_exempt
 @login_required(login_url="login")
@@ -316,8 +228,8 @@ def caradd(request):
         for i in add_list:
             new_car.caraddinfo.add(i)
         new_car.save()
-        return render(request, "caradd.html", {"success": "Elanınız uğurla dərc edildi! "})
-    return render(request, "caradd.html")
+        return render(request, "cars/caradd.html", {"success": "Elanınız uğurla dərc edildi! "})
+    return render(request, "cars/caradd.html")
 
 
 def car_detailed_views(request, id):
@@ -335,7 +247,7 @@ def car_detailed_views(request, id):
             return HttpResponseRedirect('/car_details/' + str(car.id), context)
     else:
         comment_form = NewComment()
-    return render(request, "car-details.html", {
+    return render(request, "cars/car-details.html", {
         'comments': comments,
         'comments_form': comment_form,
         "car": car,
@@ -354,7 +266,7 @@ def carviews(request):
     except EmptyPage:
         cars = carpaginator.page(carpaginator.num_pages)
 
-    return render(request, "cars.html", {"cars": cars})
+    return render(request, "cars/cars.html", {"cars": cars})
 
 
 @csrf_exempt
@@ -386,9 +298,9 @@ def searchcar(request):
         if (brand == '' and model == '' and pricemin == '' and pricemax == '' and yearmax == '' and yearmin == '') or not cars.exists():
             warning = 'Axtarışa uyğun heçnə tapılmadı!'
 
-            return render(request, "searchcar.html", {"warning": warning})
-        return render(request, "searchcar.html", {'cars': cars})
-    return render(request, "searchcar.html")
+            return render(request, "cars/searchcar.html", {"warning": warning})
+        return render(request, "cars/searchcar.html", {'cars': cars})
+    return render(request, "cars/searchcar.html")
 
 
 def favorites_add(request, id):
@@ -411,7 +323,7 @@ def favorites_list(request):
         cars = carpaginator.page(1)
     except EmptyPage:
         cars = carpaginator.page(carpaginator.num_pages)
-    return render(request, "favorites.html", {"cars": cars})
+    return render(request, "cars/favorites.html", {"cars": cars})
 
 
 @login_required(login_url='login')
@@ -425,7 +337,7 @@ def carads_list(request):
         cars = carpaginator.page(1)
     except EmptyPage:
         cars = carpaginator.page(carpaginator.num_pages)
-    return render(request, "elanlar.html", {"cars": cars})
+    return render(request, "cars/elanlar.html", {"cars": cars})
 
 
 @csrf_exempt
@@ -479,7 +391,7 @@ def careditviews(request, id):
 
         for image in images:
             if len(images) > 15:
-                return render(request, 'caredit.html', {'car': car,
+                return render(request, 'cars/caredit.html', {'car': car,
                                                         'error': f'Siz maksimum 15 şəkil əlavə edə bilərsiniz. Seçdiyiniz şəkil sayı: {len(images)}'})
             else:
                 carimages = CarMultipleImages.objects.create(images=image)
@@ -508,6 +420,6 @@ def careditviews(request, id):
         car.swap = swap
         car.addinfo = addinfo
         car.save()
-        return render(request, 'caredit.html', {'car': car, 'success': 'Uğurla redakte olundu'})
+        return render(request, 'cars/caredit.html', {'car': car, 'success': 'Uğurla redakte olundu'})
 
-    return render(request, 'caredit.html', {'car': car})
+    return render(request, 'cars/caredit.html', {'car': car})

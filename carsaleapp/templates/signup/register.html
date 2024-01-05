@@ -1,0 +1,55 @@
+{% extends 'signupbase.html' %}
+{% load static %}
+
+{% block signuptitle %} Qeydiyyat formu {% endblock %}
+
+{% block signup_content %}
+
+    <section class="container forms">
+        <div class="form signup">
+            <div class="form-content">
+                <header>Qeydiyyat</header>
+                <form method="POST">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <h4 class="alert {{ message.tags }} m-2"> {{message}} </h4>
+                        {% endfor %}
+                    {% endif %}
+                    {% csrf_token %}
+                    <div class="field input-field">
+                        <label>
+                            <input type="text" placeholder="username" class="input" name="username">
+                        </label>
+                    </div>
+
+                    <div class="field input-field">
+                        <label>
+                            <input type="password" placeholder="parol" class="password" name="password1">
+                        </label>
+                    </div>
+
+                    <div class="field input-field">
+                        <label>
+                            <input type="password" placeholder="parolu doğrula" class="password" name="password2">
+                        </label>
+                        <i class='bx bx-hide eye-icon'></i>
+                    </div>
+
+                    <div class="field input-field">
+                        <label>
+                            <input type="text" placeholder="telefon no" class="input" name="phone_number" value=994>
+                        </label>
+                    </div>
+
+                    <div class="field button-field">
+                        <button>Qeydiyyat</button>
+                    </div>
+                </form>
+                <div class="form-link">
+                    <span>Qeydiyyatın var? <a href="{% url 'login' %}">Giriş</a></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

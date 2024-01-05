@@ -1,8 +1,0 @@
-{% autoescape off %}
-
-Salam {{user.username}}
-Parolu sıfırlamaq üçün zəhmət olmasa linkə keçid edin!
-
-http://{{domain}}{%url 'reset-password' uidb64=uid token=token%}
-
-{% endautoescape %}

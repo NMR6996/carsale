@@ -55,18 +55,14 @@
 
     <form style="margin-bottom: 100px;" method="POST">
     {%csrf_token%}
-    
         <div class="container rounded bg-white mt-5 mb-5">
             <div class="row">
                 <div class="col-md-3 border-right">
                     <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                         <img class="rounded-circle mt-5" width="150px" src="{% static 'assets/images/icon.png' %}" value="">
                         <span class="font-weight-bold">
-                            <input type="text" name="username" value="{{user.username}}" maxlength="150" required id="id_username" class="form-control">
+                            <input type="text" name="username" value="{{user.username}}" maxlength="150" required id="id_username" class="form-control" readonly>
                         </span>
-                        <span class="text-black-50">
-                            <input style="font-size:14px;" type="email" name="email" value="{{user.email}}" maxlength="254" id="id_email" class="form-control">
-                        </span><br>
                     </div>
                 </div>
                 <div class="col-md-5 border-right">
@@ -74,7 +70,11 @@
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h4 class="text-right">Hesab tənzimləmələri</h4><br>
                         </div>
-                        {% if success %}<h6 style="background-color: rgba(0, 128, 0, 0.4); line-height: 3;"> {{success}} </h6>{% endif %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <h4 class="alert {{ message.tags }} m-2"> {{message}} </h4>
+                            {% endfor %}
+                        {% endif %}
                         <div class="row mt-2">
                             <div class="col-md-6">
                                 <label class="labels">Adınız</label>
@@ -88,7 +88,7 @@
                         <div class="row mt-3">
                             <div class="col-md-12">
                                 <label class="labels">Əlaqə nömrəsi</label>
-                                <input type="text" name="phone_number" value="{{ profile.phone_number }}" maxlength="10" id="id_phone_number" class="form-control">
+                                <input type="text" name="phone_number" value="{{ user.phone_number }}" maxlength="10" id="id_phone_number" class="form-control">
                             </div>
                         </div>
                         <div class="mt-5 text-center"><button type="submit" class="btn btn-primary profile-button" type="button">Yadda saxla</button></div>

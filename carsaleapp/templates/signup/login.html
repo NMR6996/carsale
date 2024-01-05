@@ -1,0 +1,48 @@
+{% extends 'signupbase.html' %}
+{% load static %}
+
+{% block signuptitle %} Giriş {% endblock %}
+
+{% block signup_content %}
+
+    <section class="container forms">
+        <div class="form login">
+            <div class="form-content">
+                <header>Giriş</header>
+                <form method="POST">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <h4 class="alert {{ message.tags }} m-2"> {{message}} </h4>
+                        {% endfor %}
+                    {% endif %}
+                    {% csrf_token %}
+                    <div class="field input-field">
+                        <label>
+                            <input type="text" placeholder="username" class="input" name="username">
+                        </label>
+                    </div>
+
+                    <div class="field input-field">
+                        <label>
+                            <input type="password" placeholder="password" class="password" name="password">
+                        </label>
+                        <i class='bx bx-hide eye-icon'></i>
+                    </div>
+
+                    <div class="form-link">
+                        <a href="{% url 'forget-password' %}" class="forgot-pass">Parolu unutmusan?</a>
+                    </div>
+
+                    <div class="field button-field">
+                        <button>Giriş</button>
+                    </div>
+                </form>
+
+                <div class="form-link">
+                    <span>Hələ də qeydiyyatdan keçməmisən? <a href="{% url 'register' %}">Qeydiyyat</a></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

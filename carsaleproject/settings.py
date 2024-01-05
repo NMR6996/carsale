@@ -17,7 +17,10 @@ import sys
 import dj_database_url
 
 import django
-from django.utils.encoding import force_str
+from dotenv import load_dotenv
+from django.contrib.messages import constants as messages
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +34,7 @@ LOGIN_URL = 'login'
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = os.getenv("DEBUG")
 
 # ALLOWED_HOSTS = ['142.93.170.92', 'http://142.93.170.92/', 'https://142.93.170.92/', 'nmravto.az', 'http://nmravto.az/', 'https://nmravto.az/', '*']
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
@@ -42,6 +45,7 @@ CSRF_TRUSTED_ORIGINS = ['https://nmravto.az']
 INSTALLED_APPS = [
     'carsaleapp',
     'storages',
+    'celery',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -86,9 +90,9 @@ WSGI_APPLICATION = 'carsaleproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
+DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE")
 
-if DEVELOPMENT_MODE is True:
+if bool(DEVELOPMENT_MODE) is True:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -136,11 +140,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-USE_SPACES = os.getenv("USE_SPACES", "False") == "True"
-print(USE_SPACES)
+USE_SPACES = os.getenv("USE_SPACES")
+
 
 if bool(USE_SPACES):
-    print(1)
     # settings
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
@@ -157,7 +160,6 @@ if bool(USE_SPACES):
     PRIVATE_MEDIA_LOCATION = 'private'
     PRIVATE_FILE_STORAGE = 'carsaleproject.storage_backends.PrivateMediaStorage'
 else:
-    print(2)
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
@@ -174,16 +176,31 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIR = [BASE_DIR / "static"]
 
+# print(DEBUG, "DEBUG")
+# print(DEVELOPMENT_MODE, "DEVELOPMENT_MODE")
+# print(USE_SPACES, "USE_SPACES")
+# print(AWS_ACCESS_KEY_ID, "AWS_ACCESS_KEY_ID")
+# print(AWS_SECRET_ACCESS_KEY, "AWS_SECRET_ACCESS_KEY")
+# print(AWS_STORAGE_BUCKET_NAME, "AWS_STORAGE_BUCKET_NAME")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-django.utils.encoding.force_text = force_str
+WHATSAPP_API_URL = 'https://graph.facebook.com/v17.0/217702221418170/messages'
+WHATSAPP_API_TOKEN = 'Bearer EAAErSte3pNMBOZCfmWk95gYvZBUzLiKch1wQZB10GuEirzelu0L6v90AZALdpAhtk9Ud7SLYxvQbz7fIMr3V3hezrXBZBmnW5jkMqVpNcW7ZBZAMPg6bOyv8JriZA1rYqI8P3dPCmPOxnIaezvEAuTKFl6qI3xJSLKLek1iEFvqIgDZCFn05Uej5VQDj1IB1KEuXRq9ucT43YdxcbMAyteacZD'
 
-EMAIL_USE_TLS = True
-EMAIL_FROM_USER = 'avtonmr@gmail.com'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'avtonmr@gmail.com'
-EMAIL_HOST_PASSWORD = 'mzqjjnneuwhgwyvh'
-EMAIL_PORT = 587
+AUTH_USER_MODEL = 'carsaleapp.NewUser'
+
+TIME_INPUT_FORMATS = [
+    '%H:%M',        # '14:30'
+]
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger'
+}
