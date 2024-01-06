@@ -35,7 +35,7 @@ def register_request(request):
                     else:
                         if len(phone_number) != 12:
                             messages.error(request, "Telefon nömrəsini düzgün daxil edin!")
-                            messages.error(request, "Nümunə: 994709924546")
+                            messages.error(request, "Nümunə: 994602924546")
                             return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('register')))
                         else:
                             user = NewUser.objects.create_user(username=username, phone_number=phone_number, password=pass1, is_active=False, otp=message)
@@ -44,7 +44,7 @@ def register_request(request):
 
                             messages.success(request, "Qeydiyyatınız uğurla tamamlandı!")
                             messages.success(request,
-                                             "Hesabı aktivləşdirmək üçün bir dəfəlik parolu daxil edin!)")
+                                             "Hesabı aktivləşdirmək üçün bir dəfəlik parolu daxil edin!")
                             return redirect('otp', username=username, phone_number=phone_number)
         else:
             messages.error(request, "Parollar eyni deyil!")
@@ -155,13 +155,10 @@ def profile(request):
     if request.method == 'POST':
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
-        phone_number = request.POST['phone_number']
-
         user.first_name = first_name
         user.last_name = last_name
-        user.phone_number = phone_number
         user.save()
-        messages.success(request, "Parolunuz uğurla dəyişdirildi")
+        messages.success(request, "Uğurla dəyişdirildi")
         return render(request, "profile.html", {"user": user})
     return render(request, "profile.html", {"user": user})
 
@@ -391,8 +388,7 @@ def careditviews(request, id):
 
         for image in images:
             if len(images) > 15:
-                return render(request, 'cars/caredit.html', {'car': car,
-                                                        'error': f'Siz maksimum 15 şəkil əlavə edə bilərsiniz. Seçdiyiniz şəkil sayı: {len(images)}'})
+                return render(request, 'cars/caredit.html', {'car': car, 'error': f'Siz maksimum 15 şəkil əlavə edə bilərsiniz. Seçdiyiniz şəkil sayı: {len(images)}'})
             else:
                 carimages = CarMultipleImages.objects.create(images=image)
                 carimages.carid.add(car.id)

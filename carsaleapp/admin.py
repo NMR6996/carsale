@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin
 
 class UserAdminConfig(UserAdmin):
     ordering = ['-date_joined']
-    list_display = ['username', 'first_name', 'last_name', 'is_active', 'is_staff', 'otp_attempts', 'otp']
+    list_display = ['username', 'first_name', 'last_name', 'phone_number', 'is_active', 'otp_attempts', 'otp']
     list_editable = ['is_active']
     fieldsets = (
         (None, {'fields': ('username', 'first_name', 'last_name', 'phone_number', 'otp_attempts', 'otp')}),
